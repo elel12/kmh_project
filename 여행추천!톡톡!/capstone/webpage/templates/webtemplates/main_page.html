@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>여행 추천 톡톡!입니다</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href=" {% static 'css/linkbuttons.css' %}" />
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript">
+        function winOpen(site) {
+            mywin = window.open(site, "new", "width=400, height = 350");
+        }
+
+        function reply() {
+            var txt = $('#txt').val();
+            if (txt.length > 0) {
+                var html_usr = "<div class='usr'><span class='usr_color'>" + esc(txt) + "</span> : 나</div><br>";
+                $('#chat').html($('#chat').html()+html_usr);
+                $.ajax({
+                    type: 'GET',
+                    url: 'ajax/',
+                    data: {text : txt},
+                    success: function(reply) {
+                        var html_bot = "<div class='chat'>봇 : <span class='chat_color'>" + esc(reply) + "</span></div><br>";
+                        $('#chat').html($('#chat').html()+html_bot);
+                        $('#txt').val('').focus();
+                        $("#chat_box").scrollTop($("#chat_box")[0].scrollHeight);
+                        link_count();
+                    }
+                });
+            }
+            $("#chat_box").scrollTop($("#chat_box")[0].scrollHeight);
+        }
+
+        function reply_test() {
+             var txt = $('#txt').val();
+             var html_usr = "<div class='usr'><span>" + esc(txt) + "</span> : 나</div><br>";
+             var html_bot = "<div class='chat'>봇 : <span>" + esc(txt) + "</span></div><br>";
+             $('#chat').html($('#chat').html()+html_usr);
+             $('#chat').html($('#chat').html()+html_bot);
+             $('#txt').val('').focus();
+             $("#chat_box").scrollTop($("#chat_box")[0].scrollHeight);
+        }
+
+        function esc(s) {
+            return s.replace('&', '&amp;').replace('<','%lt;').replace('>', '&gt');
+        }
+
+        function db_list() {
+            $.ajax({
+                type: 'GET',
+                url: 'list/',
+                success: function(data) {
+                    var link_list = "";
+                    for(var i = 0; i < data.length; i++) {
+                        link_list = "<div class='link_list' id='link_size'>" + data[i] + "</div>";
+                        $('#db_list').html($('#db_list').html()+link_list);
+                    }
+                }
+            });
+        }
+
+        function link_count() {
+            $.ajax({
+                type: 'GET',
+                url: 'list/',
+                success: function(data) {
+                var link_list = "";
+                var link_size = $('div#link_size').length;
+                if(data.length == 1 && link_size == 0) {
+                    link_list = "<div class='link_list' id='link_size'>" + data[0] + "</div>";
+                    $('#db_list').html($('#db_list').html()+link_list);
+                } else {
+                    if(link_size < data.length) {
+                        for(var i = link_size; i < data.length; i++) {
+                            link_list = "<div class='link_list' id='link_size'>" + data[i] + "</div>";
+                            $('#db_list').html($('#db_list').html()+link_list);
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+    <style>
+        @import url(http://weloveiconfonts.com/api/?family=fontawesome);
+        @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
+        [class*="fontawesome-"]:before { font-family: 'FontAwesome', sans-serif;}
+        * { box-sizing: border-box; }
+        html { height: 100%; }
+        body { background-color: #2c3338; color: #606468; font: 400 0.875rem/1.5 "Open Sans", sans-serif; margin: 0; min-height: 100%; }
+        a { color: #eee; outline: 0; text-decoration: none; }
+        a:focus, a:hover { text-decoration: underline; }
+        input { border: 0; color: inherit; font: inherit; margin: 0; outline: 0; padding: 0; -webkit-transition: background-color .3s; transition: background-color .3s; }
+        .site__container { -webkit-box-flex: 1; -webkit-flex: 1; -ms-flex: 1; flex: 1; padding: 3rem 0; }
+        .form input[type="password"], .form input[type="text"], .form input[type="submit"] { width: 100%; } .form--login { color: #606468; }
+        .form--login label, .form--login input[type="text"], .form--login input[type="password"], .form--login input[type="submit"] { border-radius: 0.25rem; padding: 1rem; }
+        .form--login label { background-color: #363b41; border-bottom-right-radius: 0; border-top-right-radius: 0; padding-left: 1.25rem; padding-right: 1.25rem; }
+        .form--login input[type="text"], .form--login input[type="password"] { background-color: #3b4148; border-bottom-left-radius: 0; border-top-left-radius: 0; }
+        .form--login input[type="text"]:focus, .form--login input[type="text"]:hover, .form--login input[type="password"]:focus, .form--login input[type="password"]:hover { background-color: #434A52; }
+        .form--login input[type="submit"] { background-color: #ea4c88; color: #eee; font-weight: bold; text-transform: uppercase; }
+        .form--login input[type="submit"]:focus, .form--login input[type="submit"]:hover { background-color: #d44179; }
+        .form__field { display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; margin-bottom: 1rem; }
+        .form__input { -webkit-box-flex: 1; -webkit-flex: 1; -ms-flex: 1; flex: 1; }
+        .align { -webkit-box-align: center; -webkit-align-items: center; -ms-flex-align: center; align-items: center; display: -webkit-box; display: -webkit-flex; display: -ms-flexbox; display: flex; -webkit-box-orient: horizontal; -webkit-box-direction: normal; -webkit-flex-direction: row; -ms-flex-direction: row; flex-direction: row; }
+        .hidden { border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; }
+        .text--center { text-align: center; }
+        .grid__container { margin: 0 auto; max-width: 20rem; width: 90%; }
+
+
+        span { border-radius: 10px; background-color: #B5B2FF; padding: 8px; color: black; }
+        .usr_color { background-color : #B5B2FF; }
+        .chat_color { background-color : #ffe0e0; }
+        .usr { text-align:right; margin-right:20px; color:#B5B2FF;}
+        .chat { color : #ffe0e0; }
+        .div_line { background: #BDBDBD; border: 1px solid #B5B2FF; border-radius: 5px; box-shadow: 0 0 5px 3px #6B66FF; color: #666; padding: 5px 10px; width: 480px; outline: none; }
+        .link_list { border-bottom: 5px dashed #B5B2FF; font-size:20px; word-wrap:break-word; margin-top:5px; margin-bottom:5px; margin-left:3px; margin-right:3px; padding : 3px;}
+        ::-webkit-scrollbar {width: 10px;}
+        ::-webkit-scrollbar-track {-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);  border-radius: 10px;}
+        ::-webkit-scrollbar-thumb {border-radius: 10px;-webkit-box-shadow: inset 0 0 6px rgba(255,255,255,1); }
+        a:link {text-decoration: none; color: #D9E5FF;}
+        a:visited {text-decoration: none; color: #D9E5FF;}
+        a:active {text-decoration: none; color: #D9E5FF;}
+    </style>
+</head>
+<body onload="db_list();">
+<!--<input type="button" value="테스트" onclick="winOpen('test/')">-->
+<div id="list_box" style="position:absolute; left:77.5%; width:20%; height:60%; top:30%; border:5px ridge #B5B2FF; overflow-x:hidden; overflow-y:auto;">
+    <div id="db_list"></div>
+</div>
+{% if user.is_authenticated %}
+<div style="position:absolute; left:24%; width:51.5%; height:95%; top:3%; border-left:8px dashed #E38AAE; border-right:8px dashed #E38AAE">
+    <div id="chat_box" style="max-height:530px;overflow-x:hidden;overflow-y:auto; margin-left:20px;">
+        <br>
+        <div id="chat"></div>
+    </div>
+    <div style="position:absolute; left:9%; top:91%;" class="usr_chat"><input id="txt" name="mychat" class = "div_line" onkeypress="if(event.keyCode == 13) reply();" style="color:#002266;" required></div><div style="position:absolute; left:80.5%; top:90.7%;"><a href="javascript:void(0)" class="largelink" onclick="reply()" style="color:#3d5887;">전송</a></div>
+</div>
+<div style="position:absolute; left:2%; top:33%;">
+    <font size = 4px>
+        <div style="border-bottom : 2px solid #E38AAE; margin : 5px; padding : 5px; color : #ffe0e0">아이디 : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ user.username }}</div>
+        <div style="border-bottom : 2px solid #E38AAE; margin : 5px; padding : 5px; color : #ffe0e0">이름 : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {{ user.first_name }}{{ user.last_name }}</div>
+        <div style="border-bottom : 2px solid #E38AAE; margin : 5px; padding : 5px; color : #ffe0e0">이메일 :&nbsp;&nbsp; <font size = 3px>{{ user.email }}</font></div>
+    </font>
+</div>
+<div style="position:absolute; left:13%; top:92%; width:180px;">
+    <a href="logout/"><font color="#ffe0e0">로그아웃</font></a>&nbsp;&nbsp;
+    <a href="" onclick="winOpen('delete/')"><font color="#ffe0e0">탈퇴하기</font></a>
+</div>
+{% else %}
+<div style="position:absolute; left:24%; width:51.5%; height:95%; top:3%; border-left:8px dashed #E38AAE; border-right:8px dashed #E38AAE;">
+    <div style="max-height:530px;overflow-x:hidden;overflow-y:auto; margin-left:20px; margin-right:20px;">
+        <br><br><br><br><br><br><br><br><br><br>
+        <div style="top:200px; text-align:center;"><font color="#B5B2FF" size="6">로그인 해주세요</font></div>
+    </div>
+    <div style="position:absolute; left:9%; top:91%;" class="usr_chat"><input name="mychat" class = "div_line" style="color:#002266;" required></div><div style="position:absolute; left:80.5%; top:90.7%;"><a href="javascript:void(0)" class="largelink" onclick="reply()" style="color:#3d5887;">전송</a></div>
+</div>
+<div class="grid__container" style="position:absolute; left:2.5%; top:30%; width:270px;">
+    <form action="login/" method="post" class="form form--login">
+        {% csrf_token %}
+        <div class="form__field">
+            <label class="fontawesome-user" for="login__username"><span class="hidden">Username</span></label>
+            <input id="login__username" type="text" class="form__input" name="uid" placeholder="Username" style="color:#B5B2FF" required>
+        </div>
+        <div class="form__field">
+            <label class="fontawesome-lock" for="login__password"><span class="hidden">Password</span></label>
+            <input id="login__password" type="password" class="form__input" placeholder="Password" name="upw" style="color:#B5B2FF" required>
+        </div>
+        <div class="form__field">
+            <input type="submit" value="Log In">
+        </div>
+    </form>
+    <p class="text--center"><a href="" onclick="winOpen('signup/')"><font color="#ffe0e0">회원가입</font></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="" onclick="winOpen('findpw/')"><font color="#ffe0e0">비밀번호 찾기</font></a></p>
+</div>
+{% endif %}
+</body>
+</html>
