@@ -1,6 +1,6 @@
 import tensorflow as tf
-import numpy as np #다차원배열 다루는 모듈
-import re #정규표현식 모듈
+import numpy as np
+import re
 
 class Embedded:
     PAD_ID = 0
@@ -172,18 +172,10 @@ class Embedded:
 def main(_):
     embedded = Embedded()
 
-    print("다음 데이터로 어휘 사전을 테스트합니다.", "./data/chat.log")
-    embedded.load_vaca("./data/chat.voc")
-    embedded.load_exam("./data/chat.log")
+    print("어휘 사전 생성")
+    embedded.build_vaca("./data/chat.log", "./data/chat.voc")
 
-    enc, dec, target = embedded.batch(10)
-    print(target)
-    enc, dec, target = embedded.batch(10)
-    print(target)
-
-    #print("다음 데이터에서 어휘 사전을 생성합니다.", "webpage/data/chat.log")
-    #embedded.build_vaca("./data/chat.log", "./data/chat.voc")
-
+    print("어휘 사전 테스트")
     embedded.load_vaca("./data/chat.voc")
     print(embedded.voca_dict)
 
